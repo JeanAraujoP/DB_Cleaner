@@ -1062,7 +1062,7 @@ FROM pedido;
  FROM pedido
  WHERE MONTH(fecha_entrega) = 1;
 
-/RETO M: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas./
+/*RETO M: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.*/
 show tables;
 describe pago;
 
@@ -1089,7 +1089,7 @@ from producto
 where gama = 'Ornamentales' and cantidad_en_stock > 100
 order by precio_venta desc;
 
-/RETO O: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30./
+/*RETO O: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30*/
 show tables;
 describe cliente;
 
