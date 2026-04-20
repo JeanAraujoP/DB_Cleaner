@@ -1062,7 +1062,7 @@ FROM pedido;
  FROM pedido
  WHERE MONTH(fecha_entrega) = 1;
 
-/*RETO M: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.*/
+/*RETO 13: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.*/
 show tables;
 describe pago;
 
@@ -1075,7 +1075,7 @@ select distinct forma_pago
 from pago;
 
 
-/*RETO N: Genera un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock.
+/*RETO 14: Genera un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock.
  El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.*/
 show tables;
 describe producto;
@@ -1089,7 +1089,7 @@ from producto
 where gama = 'Ornamentales' and cantidad_en_stock > 100
 order by precio_venta desc;
 
-/*RETO O: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30*/
+/*RETO 15: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30*/
 show tables;
 describe cliente;
 
