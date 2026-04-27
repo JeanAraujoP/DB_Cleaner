@@ -1015,17 +1015,29 @@ Utilizando la función DATE_FORMAT de MySQL. *Sin utilizar ninguna de las funcio
 select * from pago;
 show tables;
 describe pago;
-select distinct codigo_cliente /*eliminar datos duplicados de 2008*/
+select codigo_cliente
 from pago
-where year (fecha_pago) = 2008; /*EXTRAE LOS DATOS SOLO DEL 2008*/
+where fecha_pago >= '2008-01-01'
+and fecha_pago < '2009-01-01';
+
+SELECT COUNT(DISTINCT codigo_cliente) AS total_clientes_2008
+FROM pago
+WHERE fecha_pago >= '2008-01-01'
+AND fecha_pago < '2009-01-01';
+  
+SELECT codigo_cliente, COUNT(*) AS cantidad_pagos
+FROM pago
+WHERE fecha_pago >= '2008-01-01'
+AND fecha_pago < '2009-01-01'
+GROUP BY codigo_cliente
+ORDER BY cantidad_pagos DESC;
   
 /*RETO H. Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.*/
 
 SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
 FROM pedido
-WHERE fecha_entrega IS NOT NULL 
-AND fecha_entrega > fecha_esperada 
-AND estado = 'Entregado';
+WHERE fecha_entrega IS NOT NULL
+AND fecha_entrega > fecha_esperada;
   
 
 /*RETO I: Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
@@ -1039,7 +1051,7 @@ describe Pedido;
 describe pedido;
 select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
 from pedido
-where (fecha_esperada - fecha_entrega) >= 2; 
+where (fecha_entrega - fecha_esperada) >= 2; 
 
 SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega, estado, comentarios, codigo_cliente 
 FROM pedido;
@@ -1052,13 +1064,6 @@ SELECT COUNT(*)
 FROM pedido
 WHERE fecha_entrega > fecha_esperada
 OR (fecha_entrega IS NULL AND estado = 'Entregado');
-
-select * from pedido;
-show tables;
-describe pedido;
-select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
-from pedido
-where (fecha_esperada - fecha_entrega) >= 2; /* LO HICE SIN FUNCION ME PARECE MAS FACIL ASI AUNQUE PREFERIBLEMENTE CREO QUE ES MEJOR USAR LA FUNCION*/
   
 /*RETO J: Genera un listado de todos los pedidos que fueron rechazados en 2009.*/
 
