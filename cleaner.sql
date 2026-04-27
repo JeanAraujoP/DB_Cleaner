@@ -937,132 +937,150 @@ DESCRIBE EMPLEADO;
 SELECT codigo_empleado, nombre, apellido1, apellido2, extension, email, codigo_oficina, codigo_jefe
 puesto FROM EMPLEADO;
 
-/*PRACTICA DEL EXAMEN*/
- 
- 
- /*RETO 1*/
- select * from oficina; /*Base explicada por el profe belman*/
- show tables;
- describe oficina;
- select codigo_oficina,ciudad
- from oficina;
- 
-  /*RETO 2*/
-  select * from oficina;
+/*--RETO A: Retorna un listado con el código de oficina y la ciudad donde hay oficinas.*/
+show tables;
+describe oficina;
+
+select codigo_oficina, ciudad, pais, region, codigo_postal
+telefono, linea_direccion1, linea_direccion2
+from oficina;
+
+select codigo_oficina, ciudad
+from oficina;
+
+/*--RETO B: Retorna un listado con la ciudad y el teléfono de las oficinas de España.*/
+show tables;
+describe oficina;
+
+select codigo_oficina, ciudad, pais, region, codigo_postal
+telefono, linea_direccion1, linea_direccion2
+from oficina;
+
+select ciudad, telefono
+from oficina
+where pais = 'España';
+
+/*--RETO C: Retorna un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.*/
+
+show tables;
+describe empleado;
+
+select apellido1, apellido2, extension, email
+codigo_oficina, codigo_jefe, puesto
+from empleado;
+
+select nombre, apellido1, apellido2, email
+from empleado
+where codigo_jefe = 7;
+
+/*--RETO D:Retorna el nombre del puesto, nombre, apellidos y email del jefe de la empresa.*/
+show tables;
+describe empleado;
+
+select apellido1, apellido2, extension, email
+codigo_oficina, codigo_jefe, puesto
+from empleado;
+
+select puesto, nombre, apellido1, apellido2, email
+from empleado
+where codigo_jefe is null;
+
+/*--RETO C:Retorna un listado con el nombre, apellidos y puesto de aquellos empleados que no sean representantes de ventas.*/
+show tables;
+describe empleado;
+
+select apellido1, apellido2, extension, email
+codigo_oficina, codigo_jefe, puesto
+from empleado;
+
+SELECT nombre, apellido1, apellido2, puesto
+FROM empleado
+WHERE puesto <> 'Representante Ventas';
+
+/*RETO E: Retorna un listado con el nombre de los todos los clientes españoles.*/
+show tables;
+describe cliente;
+
+select codigo_cliente, nombre_cliente, nombre_contacto, apellido_contacto,telefono
+fax, linea_direccion1, linea_direccion2, ciudad, region, pais, codigo_postal, codigo_empleado_rep_ventas, limite_credito
+from cliente;
+
+select nombre_cliente
+from cliente
+where  pais = 'Spain';
+
+/*RETO F. Retorna un listado con los distintos estados por los que puede pasar un pedido.*/
+  select * from pedido;
   show tables;
-  describe oficina;
-  select ciudad, telefono
-  from oficina
-  where UPPER(pais) = 'ESPANA'; /*utile esto para llamar especificamente las de españa y el upper sirve para evitar problemas con mayusculas y minusculas*/
-  
-  /*RETO 3*/
-  
-  select * from empleado;
+  describe pedido;
+  select DISTINCT estado /* DISTINCT SE USA PARA ELIMINAR DATOS DUPLICADOS QUE MUESTRE SOLO LOS ESTADOS DE UN PAQUETE*/
+  from pedido;
+ 
+/*RETO G. Genera un listado con el código de cliente de aquellos clientes que realizaron algún pago en 2008. Tenga en cuenta que deberá eliminar aquellos códigos de cliente que aparezcan repetidos. Resuelva la consulta:
+
+Utilizando la función YEAR de MySQL.
+Utilizando la función DATE_FORMAT de MySQL. *Sin utilizar ninguna de las funciones anteriores.*/
+
+select * from pago;
   show tables;
-  describe empleado;
-  select codigo_empleado, nombre, apellido1, apellido2, email, codigo_jefe
-  from empleado
-  where UPPER(codigo_jefe) = '7';
+  describe pago;
+  select distinct codigo_cliente /*eliminar datos duplicados de 2008*/
+  from pago
+  where year (fecha_pago) = 2008; /*EXTRAE LOS DATOS SOLO DEL 2008, PREFERI USAR ESTA FUNCION POR QUE LA ENTENDI MEJOR*/
   
-  /*RETO 4*/
-  
-  select * from empleado;
+/*RETO H. Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos que no han sido entregados a tiempo.*/
+
+  select * from pedido;
   show tables;
-  describe empleado;
-  select puesto, nombre, apellido1, apellido2, email
-  from empleado
-  where UPPER (puesto) = 'Director General';
+  describe pedido;
+  select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
+  from pedido
+  where fecha_entrega > fecha_esperada; /* SE USA EL > PARA BUSCAR EN EL MYSQL SI LA FECHA DE ENTREGA SE PASO DE LA FECHA ESPERADA*/
   
-  /*RETO 5*/
+
+/*RETO I: Genera un listado con el código de pedido, código de cliente, fecha esperada y fecha de entrega de los pedidos cuya fecha de entrega ha sido al menos dos días antes de la fecha esperada.
+Utilizando la función ADDDATE de MySQL.
+Utilizando la función DATEDIFF de MySQL.
+¿Sería posible resolver esta consulta utilizando el operador de suma + o resta -? */
+ 
+   select * from pedido;
   show tables;
-  describe empleado;
-  select nombre, apellido1, apellido2, puesto
-  from empleado
-  where UPPER (puesto) NOT LIKE '%Representante Ventas%'; /* NOT LIKE SE USA PARA EXCLUIR RESULTADOS EN ESTE CASO ME PIDIERON EXCLUIR REPRESETANTE DE VENTAS Y USE EL UPPER PARA NO TENER CONFLICTO CON MAYUSCULAS Y MINUSCULAS */
+  describe pedido;
+  select codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
+  from pedido
+  where (fecha_esperada - fecha_entrega) >= 2; /* LO HICE SIN FUNCION ME PARECE MAS FACIL ASI AUNQUE PREFERIBLEMENTE CREO QUE ES MEJOR USAR LA FUNCION*/
   
-  /*RETO 6*/
-  select * from cliente;
+/*RETO J: Genera un listado de todos los pedidos que fueron rechazados en 2009.*/
+
+select * from pedido;
   show tables;
-  describe cliente;
-  select nombre_cliente
-  from cliente
-  where UPPER (pais) = 'Spain';
+  describe pedido;
+  select estado
+  from pedido
+  where estado = 'Rechazado' and year(fecha_pedido) = 2009; /* EL AND ES UNA COMPUERTA LOGICA QUE AÑADE PUES OTRA CONDICION EN ESTE CASO EL AÑO*/
   
-  /*RETO 7*/
- SELECT DISTINCT estado 
- FROM pedido;
- 
- /*RETO 8*/
- 
- SHOW TABLES;
- DESCRIBE pago;
+/*RETO K: Genera un listado de todos los pedidos que han sido entregados en el mes de enero de cualquier año.*/
+select * from pedido;
+show tables;
+describe pedido;
 
- SELECT DISTINCT codigo_cliente
- FROM pago
- WHERE YEAR(fecha_pago) = 2008;
+select codigo_pedido, codigo_cliente, fecha_pedido, fecha_entrega, estado
+from pedido
+where estado = 'Entregado' 
+  and month(fecha_entrega) = 1;
 
- SELECT DISTINCT codigo_cliente
- FROM pago
- WHERE DATE_FORMAT(fecha_pago, '%Y') = '2008';
+/*RETO L: Genera un listado con todos los pagos que se realizaron en el año 2008 mediante Paypal. Ordene el resultado de mayor a menor.*/
+select * from pago;
+show tables;
+describe pago;
 
- SELECT DISTINCT codigo_cliente
- FROM pago 
- WHERE fecha_pago >= '2008-01-01' 
- AND fecha_pago <= '2008-12-31';
- 
- /*RETO 9*/
- 
- SHOW TABLES;
- DESCRIBE pedido;
- 
- SELECT codigo_cliente, codigo_pedido, comentarios, estado, fecha_entrega, fecha_esperada, fecha_pedido
- FROM pedido;
- 
- SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
- FROM pedido
- WHERE DATEDIFF(fecha_entrega, fecha_esperada) > 0;
- 
- /*RETO 10*/
- 
- SHOW TABLES;
- DESCRIBE pedido;
+select codigo_cliente, forma_pago, id_transaccion, fecha_pago, total
+from pago
+where forma_pago = 'PayPal' 
+  and year(fecha_pago) = 2008
+order by total desc;
 
- SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega, estado, comentarios, codigo_cliente
-FROM pedido;
-
-/*operadores en MySQL */
- SELECT codigo_pedido, codigo_cliente, fecha_esperada, fecha_entrega
- FROM pedido
- WHERE fecha_entrega <= fecha_esperada - INTERVAL 2 DAY;
-
- 
- /*RETO 11*/
- 
- SHOW TABLES;
- DESCRIBE pedido;
- 
- SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega, estado, comentarios, codigo_cliente
- FROM pedido;
- 
- SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega, estado, comentarios, codigo_cliente
- FROM pedido 
- WHERE estado = 'Rechazado' 
- AND YEAR(fecha_pedido) = 2009;
- 
- 
- /*RETO 12*/
- 
- SHOW TABLES;
- DESCRIBE PEDIDO;
- 
- SELECT codigo_pedido, fecha_pedido, fecha_esperada, fecha_entrega, estado, comentarios, codigo_cliente
- FROM PEDIDO;
- 
- SELECT codigo_pedido, codigo_cliente, fecha_entrega
- FROM pedido
- WHERE MONTH(fecha_entrega) = 1;
-
-/*RETO 13: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.*/
+/*RETO M: Genera un listado con todas las formas de pago que aparecen en la tabla pago. Tenga en cuenta que no deben aparecer formas de pago repetidas.*/
 show tables;
 describe pago;
 
@@ -1070,12 +1088,12 @@ select codigo_cliente, forma_pago, id_transaccion
 fecha_pago, total
 from pago;
 
-/Usa DISTINCT justo después de SELECT para eliminar filas duplicadas y obtener valores únicos, afectando a todas las columnas mencionadas en la consulta./
+/*Usa DISTINCT justo después de SELECT para eliminar filas duplicadas y obtener valores únicos, afectando a todas las columnas mencionadas en la consulta.*/
 select distinct forma_pago
 from pago;
 
 
-/*RETO 14: Genera un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock.
+/*RETO N: Genera un listado con todos los productos que pertenecen a la gama Ornamentales y que tienen más de 100 unidades en stock.
  El listado deberá estar ordenado por su precio de venta, mostrando en primer lugar los de mayor precio.*/
 show tables;
 describe producto;
@@ -1085,11 +1103,11 @@ cantidad_en_stock, precio_venta, precio_proveedor
 from producto;
 
 select nombre, gama, precio_venta
-from producto
+from producto 
 where gama = 'Ornamentales' and cantidad_en_stock > 100
 order by precio_venta desc;
 
-/*RETO 15: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30*/
+/*RETO O: Genera un listado con todos los clientes que sean de la ciudad de Madrid y cuyo representante de ventas tenga el código de empleado 11 o 30.*/
 show tables;
 describe cliente;
 
@@ -1101,5 +1119,73 @@ from cliente;
 
 select nombre_cliente, ciudad, codigo_empleado_rep_ventas
 from cliente
-where ciudad = 'Madrid'
-and codigo_empleado_rep_ventas IN (11, 30);
+where ciudad = 'Madrid' 
+  and codigo_empleado_rep_ventas IN (11, 30);
+
+
+
+
+/* SENTENCIAS DML PARA PRÁCTICAR SIN MORIR EN EL INTENTO */
+/* EJEMPLO PARA CONOCER LAS COLUMNAS DE UNA TABLA*/
+DESCRIBE EMPLEADO;
+
+SELECT codigo_empleado, nombre, apellido1, apellido2,
+extension, email, codigo_oficina, codigo_jefe
+puesto FROM EMPLEADO;
+
+/* RETO 1 - Retorna un listado con el código de oficina y 
+la ciudad donde hay oficinas */
+
+describe oficina;
+
+select o.codigo_oficina as cod_oficina, o.ciudad country,
+concat(o.codigo_oficina,' - ', o.ciudad) as cod_ciudad_oficina
+ from oficina o;
+ 
+ /* RETO 2 - Retorna un listado con la ciudad y 
+ el telefono de las oficinas en España. */
+ 
+ select ciudad, telefono, pais from oficina
+ where upper(pais) = 'ESPAÑA';
+ 
+ /* RETO 3 - Retorna el listado con todos los clientes que sean
+ de la ciudad de Madrid y cuyo representante de ventas tenga 
+ el código de empleado 11 ó 30. */
+ 
+ describe cliente;
+ describe empleado;
+ 
+ select count(*) total_registros /*cl.ciudad, em.codigo_empleado */
+ from cliente cl 
+ join empleado em 
+ on em.codigo_empleado = cl.codigo_empleado_rep_ventas
+ where upper(cl.ciudad) = 'MADRID'
+ and (em.codigo_empleado = 11 
+ OR em.codigo_empleado = 30);
+ 
+  select count(*) total_registros /*cl.ciudad, em.codigo_empleado */
+ from cliente cl 
+ join empleado em 
+ on em.codigo_empleado = cl.codigo_empleado_rep_ventas
+ where upper(cl.ciudad) = 'MADRID'
+ and em.codigo_empleado in (11,30); 
+ 
+select count(*) total_registros /*cl.ciudad, em.codigo_empleado */
+ from cliente cl,  empleado em 
+ where em.codigo_empleado = cl.codigo_empleado_rep_ventas
+ and upper(cl.ciudad) = 'MADRID'
+ and em.codigo_empleado in (11,30); 
+ 
+ select em.codigo_empleado, count(*) total_registros /*cl.ciudad, em.codigo_empleado */
+ from cliente cl,  empleado em 
+ where em.codigo_empleado = cl.codigo_empleado_rep_ventas
+ and upper(cl.ciudad) = 'MADRID'
+ and em.codigo_empleado in (11,30)
+ group by em.codigo_empleado; 
+
+ select cl.ciudad, count(*) total_registros /*cl.ciudad, em.codigo_empleado */
+ from cliente cl,  empleado em 
+ where em.codigo_empleado = cl.codigo_empleado_rep_ventas
+ and em.codigo_empleado in (11,30)
+ group by cl.ciudad
+ order by cl.ciudad desc; 
